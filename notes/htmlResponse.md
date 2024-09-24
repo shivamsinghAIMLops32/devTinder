@@ -1,3 +1,7 @@
+# how to send html as response with styling which is known as server side rendering
+
+
+```javascript
 const express = require("express");
 const app = express();
 
@@ -27,3 +31,4 @@ app.get('/user', (req, res) => {
 app.listen(port, () => {
   console.log(`server is listening on ${port}`);
 });
+```
