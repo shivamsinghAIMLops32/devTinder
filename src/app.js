@@ -3,6 +3,8 @@ const app = express();
 
 const port = 7777;
 
+app.use(express.json()); 
+
 app.get('/user', (req, res) => {
   const fname = req.query.firstName; 
   const lname = req.query.lastName;   
@@ -13,6 +15,25 @@ app.get('/user', (req, res) => {
   });
 });
 
+app.post("/user",(req,res)=>{
+  const fname = req.body.firstName; 
+  const lname = req.body.lastName; 
+  
+  res.status(200).json({
+    msg : `every thing is working fine ${fname} ${lname}`
+  })
+})
+
+
+app.get("/user/:id/:name", (req, res) => {
+  // Extract the 'id' parameter from the request
+  const userId = req.params.id;
+  const userName= req.params.name;
+
+  res.status(200).json({
+    message: `User ID is ${userId} and userName is ${userName}`
+  });
+});
 
 app.use('/test',(req, res)=>{
   res.json({
