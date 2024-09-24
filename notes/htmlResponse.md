@@ -1,6 +1,6 @@
 # how to send html as response with styling which is known as server side rendering
 
-
+1. ** here's the code** :
 ```javascript
 const express = require("express");
 const app = express();
