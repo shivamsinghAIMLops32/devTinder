@@ -5,6 +5,14 @@ const port = 7777;
 
 app.use(express.json()); 
 
+app.get('/getIP',(req,res)=>{
+   console.log(req.ip);
+   console.dir(req.path);
+   console.dir(req.protocol);
+   console.log(req.url);
+   res.send("done wih ip");
+})
+
 app.get('/user', (req, res) => {
   const fname = req.query.firstName; 
   const lname = req.query.lastName;   
