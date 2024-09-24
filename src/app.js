@@ -3,11 +3,16 @@ const app = express();
 
 const port = 7777;
 
-app.use('/py',(req, res)=>{
+app.get('/user', (req, res) => {
+  const fname = req.query.firstName; 
+  const lname = req.query.lastName;   
+
   res.json({
-    msg:"i am home"
+    firstName: fname,  
+    lastName: lname    
   });
-})
+});
+
 
 app.use('/test',(req, res)=>{
   res.json({
