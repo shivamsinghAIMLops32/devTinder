@@ -9,3 +9,13 @@ To set up an Express application, follow these steps:
    
    npm install express
    ```
+
+2. **Git commands**   
+```
+   git init
+   git add .
+   git commit -m "first commit"
+   git remote add origin "link of github repo"
+   git branch -M main
+   git push -u orgin main
+   ```
