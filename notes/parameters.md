@@ -1,60 +1,64 @@
-# GET and POST
+# Express.js Example
 
-1. **the code for req and res objects and their parameters** :
+This example demonstrates how to set up a simple Express.js server with various routes for handling GET and POST requests.
 
-   ```js
+```javascript
 const express = require('express');
 const app = express();
 
 const port = 7777;
 
+// Middleware to parse JSON bodies (enable us to access body as for post req)
 app.use(express.json()); 
 
-app.get('/getIP',(req,res)=>{
-   console.log(req.ip);
-   console.dir(req.path);
-   console.dir(req.protocol);
-   console.log(req.url);
-   res.send("done wih ip");
-})
+// GET request to retrieve IP address and other details
+app.get('/getIP', (req, res) => {
+    console.log(req.ip);             // Log the client's IP address
+    console.dir(req.path);           // Log the request path
+    console.dir(req.protocol);       // Log the request protocol (http or https)
+    console.log(req.url);            // Log the full URL requested
+    res.send("Done with IP");
+});
 
+// GET request to retrieve user details from query parameters
 app.get('/user', (req, res) => {
-  const fname = req.query.firstName; 
-  const lname = req.query.lastName;   
+    const fname = req.query.firstName; 
+    const lname = req.query.lastName;   
 
-  res.json({
-    firstName: fname,  
-    lastName: lname    
-  });
+    res.json({
+        firstName: fname,  
+        lastName: lname    
+    });
 });
 
-app.post("/user",(req,res)=>{
-  const fname = req.body.firstName; 
-  const lname = req.body.lastName; 
-  
-  res.status(200).json({
-    msg : `every thing is working fine ${fname} ${lname}`
-  })
-})
+// POST request to create a new user
+app.post("/user", (req, res) => {
+    const fname = req.body.firstName; 
+    const lname = req.body.lastName; 
+    
+    res.status(200).json({
+        msg: `Everything is working fine ${fname} ${lname}`
+    });
+});
 
-
+// GET request to retrieve user details from URL parameters
 app.get("/user/:id/:name", (req, res) => {
-  // Extract the 'id' parameter from the request
-  const userId = req.params.id;
-  const userName= req.params.name;
+    const userId = req.params.id;        // Extract the 'id' parameter
+    const userName = req.params.name;    // Extract the 'name' parameter
 
-  res.status(200).json({
-    message: `User ID is ${userId} and userName is ${userName}`
-  });
+    res.status(200).json({
+        message: `User ID is ${userId} and User Name is ${userName}`
+    });
 });
 
-app.use('/test',(req, res)=>{
-  res.json({
-    msg:"i am test route"
-  });
-})
-
-app.listen(port,()=>{
-  console.log(`server is listening on ${port}`);
+// Test route to check server response
+app.use('/test', (req, res) => {
+    res.json({
+        msg: "I am a test route"
+    });
 });
-```
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
+});
