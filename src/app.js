@@ -5,11 +5,24 @@ const bcrypt = require("bcrypt");
 const User = require("./models/User.js");
 const { userSchema, userUpdateSchema } = require("./validations/userValidation");
 
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = 7777;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use(cookieParser());
+
+app.get("/login",(req,res)=>{
+    res.cookie("token","jbwfuh39290343u2ubcuhe");
+    res.send("user logged in successfully");
+})
+
+app.get("/getUser",(req,res)=>{
+    const cookie = req.cookies;
+    console.log(cookie);
+    res.send("cookie has been sent for getUser route");
+})
 
 // Route to create a new user
 app.post("/user", async (req, res) => {
