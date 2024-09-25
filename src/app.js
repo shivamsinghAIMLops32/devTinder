@@ -6,6 +6,8 @@ const User = require("./models/User.js");
 const { userSchema, userUpdateSchema } = require("./validations/userValidation");
 
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
 const app = express();
 const port = 7777;
 
@@ -13,15 +15,53 @@ const port = 7777;
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/login",(req,res)=>{
-    res.cookie("token","jbwfuh39290343u2ubcuhe");
-    res.send("user logged in successfully");
+app.post("/login",async (req,res)=>{
+try{
+    const {email,password} = req.body;
+    if(!email || !password){
+        res.send("all credentials are must to fill");
+    }
+
+    const user = await User.findOne({email:email});
+    if(!user){
+        throw new Error("invalid credential");
+    }
+ 
+    const isPassWordValid = await bcrypt.compare(password,user.password)
+    if(isPassWordValid){
+        // create jwt
+            const secretJWTToken = await jwt.sign({_id: user._id},"DEV@Tinnder$790");
+        
+        // send back the cookie token    
+            res.cookie("token",secretJWTToken);
+            res.send("user logged in successfully");
+    }
+}catch(err){
+    res.send("error occured"+err);
+}
 })
 
-app.get("/getUser",(req,res)=>{
+app.get("/getUser",async (req,res)=>{
+   try{
     const cookie = req.cookies;
-    console.log(cookie);
-    res.send("cookie has been sent for getUser route");
+    const {token} = cookie;
+    if(!token){
+        throw new Error("invalid token");
+    }
+    // validate my token
+    const decodedMessage =  await jwt.verify(token,"DEV@Tinnder$790")
+    // extracct the id by decode message
+    const {_id} = decodedMessage;
+    
+    const user =await User.findById(_id);
+    if(!user){
+        throw new Error("not authorized");
+    }
+    // console.log(cookie);
+    res.send(user);
+   }catch(err){
+    res.status(400).send("error :"+err);
+   }
 })
 
 // Route to create a new user
