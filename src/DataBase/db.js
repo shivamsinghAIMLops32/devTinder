@@ -1,16 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const connectDB = async () => {
-    try {
-        await mongoose.connect('mongodb+srv://shivamsinghcse19:pYtZBB6tqjjcEyqo@cluster0.g5pyj.mongodb.net/user', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log('MongoDB connected');
-    } catch (error) {
-        console.error('MongoDB connection error:', error);
-        process.exit(1);
-    }
-};
+const connectDB = async ()=>{
+    
+    await mongoose.connect("mongodb+srv://shivamsinghcse19:pYtZBB6tqjjcEyqo@cluster0.g5pyj.mongodb.net/devTinder");
+} 
 
-module.exports = connectDB;
+module.exports = {connectDB};
