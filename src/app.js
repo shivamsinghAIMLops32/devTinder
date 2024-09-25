@@ -1,85 +1,26 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const User = require("./models/User"); // Import User model
-const connectDB = require('./DataBase/db.js'); // Your DB connection
-const { body, validationResult } = require('express-validator');
-
 const app = express();
+
 const port = 7777;
+const {adminAuth,userAuth} = require("./middlewares/auth.js");
 
-// Middleware
-app.use(express.json());
+// handle auth middleware for all admin request
+app.use("/admin",adminAuth);
+app.use("/user",userAuth);
 
-// Connect to the database
-connectDB();
-
-// User Signup Route
-app.post("/signup", [
-    // Input validation
-    body('firstName').isLength({ min: 1 }).trim().withMessage('First name is required.'),
-    body('lastName').isLength({ min: 1 }).trim().withMessage('Last name is required.'),
-    body('email').isEmail().withMessage('Invalid email address.'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
-], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { firstName, lastName, email, password } = req.body;
-
-    try {
-        // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).send('User already exists');
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create a new user
-        const newUser = new User({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-        });
-
-        // Save the user to the database
-        await newUser.save();
-        res.status(201).send("User signed up successfully");
-    } catch (error) {
-        console.error("Error in signup route:", error);
-        res.status(500).send("Internal Server Error");
-    }
+// routes
+app.get("/admin",(req,res)=>{
+     res.send("admin data is sent");
 });
 
-app.get("/signup", async (req, res) => {
-  const Useremail = req.query.email;
-
-  if (!Useremail) {
-      return res.status(400).send("Email query parameter is required");
-  }
-
-  try {
-      // Find the user by email
-      const user = await User.findOne({ email: Useremail });
-      
-      if (!user) {
-          return res.status(404).send("User not found");
-      }
-
-      // Send the user data (omit the password for security)
-      const { password, ...userData } = user.toObject();
-      res.send(userData);
-  } catch (err) {
-      console.error("Error fetching user:", err);
-      res.status(500).send("Internal Server Error");
-  }
+app.get("/admin/getAllData",(req,res)=>{
+  res.send("admin all data has been sent");
 });
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
+
+app.get("/user",(req,res)=>{
+  res.send("user data is sent");
 });
+
+app.listen(port,()=>{
+  console.log(`port is listening at ${port}`);
+})
